@@ -1,0 +1,766 @@
+﻿@model EmployeeManagementSystem.Models.DashboardViewModel
+
+@{
+    ViewData["Title"] = "Dashboard";
+}
+
+<div class="container-fluid">
+ 
+    <div class="d-flex justify-content-between align-items-center mb-4">
+
+        <div>
+            <h1 class="fw-bold mb-1">
+                @if (User.IsInRole("Admin"))
+                {
+                    <span>Admin Dashboard</span>
+                }
+                else
+                {
+                    <span>Employee Dashboard</span>
+                }
+            </h1>
+
+            <p class="text-muted mb-0">
+                Welcome, @User.Identity?.Name
+            </p>
+        </div>
+
+        <div>
+            <span class="badge bg-dark px-3 py-2">
+                @User.FindFirst(
+                System.Security.Claims.ClaimTypes.Role)?.Value
+            </span>
+        </div>
+
+    </div>
+
+     
+    @if (User.IsInRole("Admin"))
+        {
+    <!-- STATISTICS CARDS -->
+
+    <div class="row g-4 mb-4">
+
+        <!-- Employees -->
+
+        <div class="col-xl-3 col-md-6">
+
+            <div class="card dashboard-card shadow-sm border-0 h-100">
+
+                <div class="card-body">
+
+                    <div class="d-flex justify-content-between">
+
+                        <div>
+
+                            <p class="text-muted mb-1">
+                                Total Employees
+                            </p>
+
+                            <h2 class="fw-bold mb-0">
+                                @Model.TotalEmployees
+                            </h2>
+
+                        </div>
+
+                        <div class="icon-box bg-primary-subtle text-primary">
+                            <i class="bi bi-people-fill"></i>
+                        </div>
+
+                    </div>
+
+                    <a asp-controller="Employee"
+                       asp-action="Index"
+                       class="small text-decoration-none">
+                        View Employees →
+                    </a>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- Departments -->
+
+        <div class="col-xl-3 col-md-6">
+
+            <div class="card dashboard-card shadow-sm border-0 h-100">
+
+                <div class="card-body">
+
+                    <div class="d-flex justify-content-between">
+
+                        <div>
+
+                            <p class="text-muted mb-1">
+                                Departments
+                            </p>
+
+                            <h2 class="fw-bold mb-0">
+                                @Model.TotalDepartments
+                            </h2>
+
+                        </div>
+
+                        <div class="icon-box bg-success-subtle text-success">
+                            <i class="bi bi-building"></i>
+                        </div>
+
+                    </div>
+
+                    <a asp-controller="Department"
+                       asp-action="Index"
+                       class="small text-decoration-none">
+                        View Departments →
+                    </a>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- Pending Leaves -->
+
+        <div class="col-xl-3 col-md-6">
+
+            <div class="card dashboard-card shadow-sm border-0 h-100">
+
+                <div class="card-body">
+
+                    <div class="d-flex justify-content-between">
+
+                        <div>
+
+                            <p class="text-muted mb-1">
+                                Pending Leaves
+                            </p>
+
+                            <h2 class="fw-bold mb-0">
+                                @Model.PendingLeaves
+                            </h2>
+
+                        </div>
+
+                        <div class="icon-box bg-warning-subtle text-warning">
+                            <i class="bi bi-hourglass-split"></i>
+                        </div>
+
+                    </div>
+
+                    <a asp-controller="Leave"
+                       asp-action="Index"
+                       asp-route-status="Pending"
+                       class="small text-decoration-none">
+                        Review Leaves →
+                    </a>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- Approved Leaves -->
+
+        <div class="col-xl-3 col-md-6">
+
+            <div class="card dashboard-card shadow-sm border-0 h-100">
+
+                <div class="card-body">
+
+                    <div class="d-flex justify-content-between">
+
+                        <div>
+
+                            <p class="text-muted mb-1">
+                                Approved Leaves
+                            </p>
+
+                            <h2 class="fw-bold mb-0">
+                                @Model.ApprovedLeaves
+                            </h2>
+
+                        </div>
+
+                        <div class="icon-box bg-info-subtle text-info">
+                            <i class="bi bi-check-circle-fill"></i>
+                        </div>
+
+                    </div>
+
+                    <a asp-controller="Leave"
+                       asp-action="Index"
+                       asp-route-status="Approved"
+                       class="small text-decoration-none">
+                        View Approved →
+                    </a>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- SALARY CARDS -->
+
+    <div class="row g-4 mb-4">
+
+        <div class="col-md-6">
+
+            <div class="card shadow-sm border-0">
+
+                <div class="card-body">
+
+                    <p class="text-muted mb-1">
+                        Average Salary
+                    </p>
+
+                    <h3 class="fw-bold">
+                        ₹@Model.AverageSalary.ToString("N2")
+                    </h3>
+
+                    <div class="progress mt-3"
+                         style="height: 7px;">
+
+                        <div class="progress-bar"
+                             style="width: 70%;">
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div class="col-md-6">
+
+            <div class="card shadow-sm border-0">
+
+                <div class="card-body">
+
+                    <p class="text-muted mb-1">
+                        Highest Salary
+                    </p>
+
+                    <h3 class="fw-bold">
+                        ₹@Model.HighestSalary.ToString("N2")
+                    </h3>
+
+                    <div class="progress mt-3"
+                         style="height: 7px;">
+
+                        <div class="progress-bar"
+                             style="width: 90%;">
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+ 
+
+    <div class="row g-4 mb-4">
+
+        <!-- Leave Statistics -->
+
+        <div class="col-lg-5">
+
+            <div class="card shadow-sm border-0 h-100">
+
+                <div class="card-header bg-white border-0">
+
+                    <h5 class="fw-bold mb-0">
+                        Leave Statistics
+                    </h5>
+
+                    <small class="text-muted">
+                        Current leave status
+                    </small>
+
+                </div>
+
+                <div class="card-body">
+
+                    <div style="height:300px;">
+
+                        <canvas id="leaveChart"></canvas>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- Department Statistics -->
+
+        <div class="col-lg-7">
+
+            <div class="card shadow-sm border-0 h-100">
+
+                <div class="card-header bg-white border-0">
+
+                    <h5 class="fw-bold mb-0">
+                        Department Statistics
+                    </h5>
+
+                    <small class="text-muted">
+                        Employees by department
+                    </small>
+
+                </div>
+
+                <div class="card-body">
+
+                    <div style="height:300px;">
+
+                        <canvas id="departmentChart"></canvas>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+ 
+    <div class="card shadow-sm border-0 mb-4">
+
+        <div class="card-header bg-white border-0">
+
+            <h5 class="fw-bold mb-0">
+                Quick Actions
+            </h5>
+
+        </div>
+
+        <div class="card-body">
+
+            <div class="row g-3">
+
+                <div class="col-md-3">
+
+                    <a asp-controller="Employee"
+                       asp-action="Create"
+                       class="btn btn-primary w-100 py-3">
+
+                        <i class="bi bi-person-plus me-2"></i>
+                        Add Employee
+
+                    </a>
+
+                </div>
+
+
+                <div class="col-md-3">
+
+                    <a asp-controller="Department"
+                       asp-action="Create"
+                       class="btn btn-success w-100 py-3">
+
+                        <i class="bi bi-building-add me-2"></i>
+                        Add Department
+
+                    </a>
+
+                </div>
+
+
+                <div class="col-md-3">
+
+                    <a asp-controller="Leave"
+                       asp-action="Index"
+                       class="btn btn-warning w-100 py-3">
+
+                        <i class="bi bi-calendar-check me-2"></i>
+                        Manage Leaves
+
+                    </a>
+
+                </div>
+
+
+                <div class="col-md-3">
+
+                    <a asp-controller="User"
+                       asp-action="Index"
+                       class="btn btn-dark w-100 py-3">
+
+                        <i class="bi bi-people me-2"></i>
+                        User Management
+
+                    </a>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+        }
+ 
+    @if (User.IsInRole("Employee"))
+    {
+        <div class="row g-4 mb-4">
+
+            <!-- My Leaves -->
+
+            <div class="col-xl-3 col-md-6">
+
+                <div class="card dashboard-card shadow-sm border-0">
+
+                    <div class="card-body">
+
+                        <p class="text-muted">
+                            My Leaves
+                        </p>
+
+                        <h2 class="fw-bold">
+                            @Model.MyLeaves
+                        </h2>
+
+                        <a asp-controller="MyLeave"
+                           asp-action="Index"
+                           class="small text-decoration-none">
+                            View My Leaves →
+                        </a>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- Pending -->
+
+            <div class="col-xl-3 col-md-6">
+
+                <div class="card dashboard-card shadow-sm border-0">
+
+                    <div class="card-body">
+
+                        <p class="text-muted">
+                            Pending
+                        </p>
+
+                        <h2 class="fw-bold text-warning">
+                            @Model.MyPendingLeaves
+                        </h2>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- Approved -->
+
+            <div class="col-xl-3 col-md-6">
+
+                <div class="card dashboard-card shadow-sm border-0">
+
+                    <div class="card-body">
+
+                        <p class="text-muted">
+                            Approved
+                        </p>
+
+                        <h2 class="fw-bold text-success">
+                            @Model.MyApprovedLeaves
+                        </h2>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- Rejected -->
+
+            <div class="col-xl-3 col-md-6">
+
+                <div class="card dashboard-card shadow-sm border-0">
+
+                    <div class="card-body">
+
+                        <p class="text-muted">
+                            Rejected
+                        </p>
+
+                        <h2 class="fw-bold text-danger">
+                            @Model.MyRejectedLeaves
+                        </h2>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- EMPLOYEE ACTIONS -->
+
+        <div class="row g-4">
+
+            <div class="col-md-6">
+
+                <div class="card shadow-sm border-0">
+
+                    <div class="card-body">
+
+                        <h5 class="fw-bold">
+                            Leave Management
+                        </h5>
+
+                        <p class="text-muted">
+                            Apply for leave and check your leave status.
+                        </p>
+
+                        <a asp-controller="MyLeave"
+                           asp-action="Create"
+                           class="btn btn-primary">
+
+                            <i class="bi bi-calendar-plus me-2"></i>
+                            Apply Leave
+
+                        </a>
+
+                        <a asp-controller="MyLeave"
+                           asp-action="Index"
+                           class="btn btn-outline-secondary">
+
+                            My Leaves
+
+                        </a>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div class="col-md-6">
+
+                <div class="card shadow-sm border-0">
+
+                    <div class="card-body">
+
+                        <h5 class="fw-bold">
+                            My Profile
+                        </h5>
+
+                        <p class="text-muted">
+                            View and update your profile information.
+                        </p>
+
+                        <a asp-controller="MyProfile"
+                           asp-action="Index"
+                           class="btn btn-dark">
+
+                            <i class="bi bi-person me-2"></i>
+                            View Profile
+
+                        </a>
+
+                        <a asp-controller="Account"
+                           asp-action="ChangePassword"
+                           class="btn btn-outline-secondary">
+
+                            Change Password
+
+                        </a>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+    }
+
+</div>
+ 
+@if (User.IsInRole("Admin"))
+{
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <script>
+
+        // ==========================================
+        // LEAVE CHART
+        // ==========================================
+
+        const leaveChart =
+            document.getElementById("leaveChart");
+
+
+        new Chart(leaveChart,
+        {
+            type: "doughnut",
+
+            data:
+            {
+                labels:
+                [
+                    "Pending",
+                    "Approved"
+                ],
+
+                datasets:
+                [
+                    {
+                        data:
+                        [
+                            @Model.PendingLeaves,
+                            @Model.ApprovedLeaves
+                        ],
+
+                        borderWidth: 0
+                    }
+                ]
+            },
+
+            options:
+            {
+                responsive: true,
+
+                maintainAspectRatio: false,
+
+                plugins:
+                {
+                    legend:
+                    {
+                        position: "bottom"
+                    }
+                }
+            }
+        });
+
+ 
+        const departmentChart =
+            document.getElementById(
+                "departmentChart");
+
+
+        new Chart(departmentChart,
+        {
+            type: "bar",
+
+            data:
+            {
+                labels:
+                [
+                    @foreach (
+                                            var department
+                                            in Model.DepartmentEmployeeCounts)
+                    {
+                            @: "@department.DepartmentName",
+                    }
+                ],
+
+                datasets:
+                [
+                    {
+                        label: "Employees",
+
+                        data:
+                        [
+                            @foreach (
+                                                            var department
+                                                            in Model.DepartmentEmployeeCounts)
+                            {
+                                    @: @department.EmployeeCount,
+                            }
+                        ],
+
+                        borderWidth: 1
+                    }
+                ]
+            },
+
+            options:
+            {
+                responsive: true,
+
+                maintainAspectRatio: false,
+
+                scales:
+                {
+                    y:
+                    {
+                        beginAtZero: true,
+
+                        ticks:
+                        {
+                            precision: 0
+                        }
+                    }
+                },
+
+                plugins:
+                {
+                    legend:
+                    {
+                        display: false
+                    }
+                }
+            }
+        });
+
+    </script>
+}
+
+ <style>
+
+    .dashboard-card {
+        transition: all 0.2s ease;
+    }
+
+        .dashboard-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.10) !important;
+        }
+
+    .icon-box {
+        width: 50px;
+        height: 50px;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 22px;
+    }
+
+    .card {
+        border-radius: 14px;
+    }
+
+</style>

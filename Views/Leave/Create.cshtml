@@ -1,0 +1,267 @@
+﻿@model EmployeeManagementSystem.Models.Leave
+
+@{
+    ViewData["Title"] = "Apply Leave";
+}
+
+<h1>Apply Leave</h1>
+
+<form asp-action="Create" method="post">
+
+    @Html.AntiForgeryToken()
+
+    <div asp-validation-summary="All"
+         class="text-danger"></div>
+
+
+    <!-- Employee -->
+
+    <div class="mb-3">
+
+        <label asp-for="EmployeeId"
+               class="form-label">
+            Employee
+        </label>
+
+        <select asp-for="EmployeeId"
+                asp-items="ViewBag.Employees"
+                class="form-select">
+
+            <option value="">
+                -- Select Employee --
+            </option>
+
+        </select>
+
+        <span asp-validation-for="EmployeeId"
+              class="text-danger">
+        </span>
+
+    </div>
+
+
+    <!-- Leave Type -->
+
+    <div class="mb-3">
+
+        <label asp-for="LeaveType"
+               class="form-label">
+            Leave Type
+        </label>
+
+        <select asp-for="LeaveType"
+                class="form-select">
+
+            <option value="">
+                -- Select Leave Type --
+            </option>
+
+            <option value="Casual Leave">
+                Casual Leave
+            </option>
+
+            <option value="Sick Leave">
+                Sick Leave
+            </option>
+
+            <option value="Earned Leave">
+                Earned Leave
+            </option>
+
+        </select>
+
+        <span asp-validation-for="LeaveType"
+              class="text-danger">
+        </span>
+
+    </div>
+
+
+    <!-- Start Date -->
+
+    <div class="mb-3">
+
+        <label asp-for="StartDate"
+               class="form-label">
+            Start Date
+        </label>
+
+        <input asp-for="StartDate"
+               type="date"
+               id="startDate"
+               class="form-control" />
+
+        <span asp-validation-for="StartDate"
+              class="text-danger">
+        </span>
+
+    </div>
+
+
+    <!-- End Date -->
+
+    <div class="mb-3">
+
+        <label asp-for="EndDate"
+               class="form-label">
+            End Date
+        </label>
+
+        <input asp-for="EndDate"
+               type="date"
+               id="endDate"
+               class="form-control" />
+
+        <span asp-validation-for="EndDate"
+              class="text-danger">
+        </span>
+
+    </div>
+
+
+    <!-- Leave Duration -->
+
+    <div class="mb-3">
+
+        <label class="form-label">
+            Leave Duration
+        </label>
+
+        <div class="alert alert-info"
+             id="durationMessage">
+
+            Please select start date and end date.
+
+        </div>
+
+    </div>
+
+
+    <!-- Reason -->
+
+    <div class="mb-3">
+
+        <label asp-for="Reason"
+               class="form-label">
+            Reason
+        </label>
+
+        <textarea asp-for="Reason"
+                  class="form-control"></textarea>
+
+        <span asp-validation-for="Reason"
+              class="text-danger">
+        </span>
+
+    </div>
+
+
+    <!-- Buttons -->
+
+    <button type="submit"
+            class="btn btn-success">
+
+        Apply Leave
+
+    </button>
+
+
+    <a asp-action="Index"
+       class="btn btn-secondary">
+
+        Back
+
+    </a>
+
+</form>
+
+
+@section Scripts {
+
+    @{
+        await Html.RenderPartialAsync(
+            "_ValidationScriptsPartial");
+    }
+
+
+    <script>
+
+        const startDate =
+            document.getElementById("startDate");
+
+        const endDate =
+            document.getElementById("endDate");
+
+        const durationMessage =
+            document.getElementById("durationMessage");
+
+
+        function calculateDuration() {
+
+            if (!startDate.value ||
+                !endDate.value) {
+
+                durationMessage.textContent =
+                    "Please select start date and end date.";
+
+                durationMessage.className =
+                    "alert alert-info";
+
+                return;
+            }
+
+
+            const start =
+                new Date(startDate.value);
+
+            const end =
+                new Date(endDate.value);
+
+
+            if (end < start) {
+
+                durationMessage.textContent =
+                    "End date cannot be before start date.";
+
+                durationMessage.className =
+                    "alert alert-danger";
+
+                return;
+            }
+
+
+            const difference =
+                end.getTime() - start.getTime();
+
+
+            const days =
+                Math.floor(
+                    difference /
+                    (1000 * 60 * 60 * 24)
+                ) + 1;
+
+
+            durationMessage.textContent =
+                "Leave Duration: " + days + " Day(s)";
+
+            durationMessage.className =
+                "alert alert-success";
+        }
+
+
+        startDate.addEventListener(
+            "change",
+            calculateDuration
+        );
+
+
+        endDate.addEventListener(
+            "change",
+            calculateDuration
+        );
+
+
+        calculateDuration();
+
+    </script>
+}

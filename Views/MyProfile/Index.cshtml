@@ -1,0 +1,191 @@
+﻿@model EmployeeManagementSystem.Models.Employee
+
+@{
+    ViewData["Title"] = "My Profile";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-3">
+
+    <h1>My Profile</h1>
+
+    <a asp-controller="MyProfile"
+       asp-action="Edit"
+       class="btn btn-primary">
+        Edit Profile
+    </a>
+
+</div>
+
+<hr />
+
+<div class="row">
+
+    <!-- ================================= -->
+    <!-- PROFILE IMAGE -->
+    <!-- ================================= -->
+
+    <div class="col-md-4 text-center mb-4">
+
+        <div class="card shadow-sm">
+
+            <div class="card-body">
+
+                @if (!string.IsNullOrEmpty(Model.ProfileImage))
+                {
+                    <img src="@Model.ProfileImage"
+                         alt="Profile Image"
+                         class="rounded-circle img-thumbnail"
+                         style="width:200px;height:200px;object-fit:cover;" />
+                }
+                else
+                {
+                    <div class="rounded-circle border d-flex
+                                    align-items-center justify-content-center mx-auto"
+                         style="width:200px;height:200px;">
+
+                        <span class="text-muted">
+                            No Image
+                        </span>
+
+                    </div>
+                }
+
+                <h4 class="mt-3">
+                    @Model.Name
+                </h4>
+
+                <p class="text-muted mb-0">
+                    Employee
+                </p>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- ================================= -->
+    <!-- EMPLOYEE INFORMATION -->
+    <!-- ================================= -->
+
+    <div class="col-md-8">
+
+        <div class="card shadow-sm">
+
+            <div class="card-header bg-dark text-white">
+
+                <h4 class="mb-0">
+                    Employee Information
+                </h4>
+
+            </div>
+
+
+            <div class="card-body">
+
+                <div class="row mb-3">
+
+                    <div class="col-sm-4 fw-bold">
+                        Name
+                    </div>
+
+                    <div class="col-sm-8">
+                        @Model.Name
+                    </div>
+
+                </div>
+
+
+                <div class="row mb-3">
+
+                    <div class="col-sm-4 fw-bold">
+                        Email
+                    </div>
+
+                    <div class="col-sm-8">
+                        @Model.Email
+                    </div>
+
+                </div>
+
+
+                <div class="row mb-3">
+
+                    <div class="col-sm-4 fw-bold">
+                        Phone
+                    </div>
+
+                    <div class="col-sm-8">
+                        @Model.Phone
+                    </div>
+
+                </div>
+
+
+                <div class="row mb-3">
+
+                    <div class="col-sm-4 fw-bold">
+                        Department
+                    </div>
+
+                    <div class="col-sm-8">
+
+                        @(Model.Department?.Name ?? "Not Assigned")
+
+                    </div>
+
+                </div>
+
+
+                <div class="row mb-3">
+
+                    <div class="col-sm-4 fw-bold">
+                        Salary
+                    </div>
+
+                    <div class="col-sm-8">
+
+                        ₹@Model.Salary.ToString("N2")
+
+                    </div>
+
+                </div>
+
+
+                <div class="row">
+
+                    <div class="col-sm-4 fw-bold">
+                        Joining Date
+                    </div>
+
+                    <div class="col-sm-8">
+
+                        @Model.JoiningDate.ToString("dd-MM-yyyy")
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- ================================= -->
+        <!-- EDIT BUTTON -->
+        <!-- ================================= -->
+
+        <div class="mt-3">
+
+            <a asp-controller="MyProfile"
+               asp-action="Edit"
+               class="btn btn-warning">
+                Edit Profile
+            </a>
+
+        </div>
+
+    </div>
+
+</div>

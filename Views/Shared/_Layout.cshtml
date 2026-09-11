@@ -1,0 +1,472 @@
+﻿@using System.Security.Claims
+@using EmployeeManagementSystem.Data
+@using EmployeeManagementSystem.Services
+@using EmployeeManagementSystem.Models
+
+@inject EmployeeDbContext DbContext
+@inject INotificationService NotificationService
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0" />
+
+    <title>
+        @ViewData["Title"] - Employee Management System
+    </title>
+
+    <link rel="stylesheet"
+          href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+
+    <link rel="stylesheet"
+          href="~/css/site.css"
+          asp-append-version="true" />
+</head>
+
+<body>
+
+<header>
+
+    <nav class="navbar navbar-expand-sm navbar-light bg-white border-bottom box-shadow mb-3">
+
+        <div class="container-fluid">
+
+            <!-- BRAND -->
+
+            <a class="navbar-brand"
+               asp-controller="Home"
+               asp-action="Index">
+
+                E M System
+
+            </a>
+
+
+            <!-- MOBILE BUTTON -->
+
+            <button class="navbar-toggler"
+                    type="button"
+                    data-bs-toggle="collapse"
+                    data-bs-target=".navbar-collapse"
+                    aria-controls="navbarSupportedContent"
+                    aria-expanded="false"
+                    aria-label="Toggle navigation">
+
+                <span class="navbar-toggler-icon"></span>
+
+            </button>
+
+
+            <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
+
+                <!-- LEFT MENU -->
+
+                <ul class="navbar-nav flex-grow-1">
+
+                    @if (User.Identity?.IsAuthenticated == true)
+                    {
+                        <!-- DASHBOARD -->
+
+                        <li class="nav-item">
+
+                            <a class="nav-link text-dark"
+                               asp-controller="Home"
+                               asp-action="Index">
+
+                                Dashboard
+
+                            </a>
+
+                        </li>
+
+
+                        <!-- ADMIN MENU -->
+
+                        @if (User.IsInRole("Admin"))
+                        {
+                            <li class="nav-item">
+
+                                <a class="nav-link text-dark"
+                                   asp-controller="Employee"
+                                   asp-action="Index">
+
+                                    Employees
+
+                                </a>
+
+                            </li>
+
+                            <li class="nav-item">
+
+                                <a class="nav-link text-dark"
+                                   asp-controller="Department"
+                                   asp-action="Index">
+
+                                    Departments
+
+                                </a>
+
+                            </li>
+
+                            <li class="nav-item">
+
+                                <a class="nav-link text-dark"
+                                   asp-controller="Leave"
+                                   asp-action="Index">
+
+                                    Leaves
+
+                                </a>
+
+                            </li>
+                                <li class="nav-item">
+
+                                    <a class="nav-link text-dark"
+                                       asp-controller="User"
+                                       asp-action="Index">
+
+                                        User Management
+
+                                    </a>
+
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link"
+                                       asp-controller="Reports"
+                                       asp-action="Index">
+                                        <i class="bi bi-bar-chart-line me-1"></i>
+                                        Reports
+                                    </a>
+                                </li>
+                        }
+
+
+                        <!-- EMPLOYEE MENU -->
+
+                        @if (User.IsInRole("Employee"))
+                        {
+                            <li class="nav-item">
+
+                                <a class="nav-link text-dark"
+                                   asp-controller="MyLeave"
+                                   asp-action="Index">
+
+                                    My Leaves
+
+                                </a>
+
+                            </li>
+
+                            <li class="nav-item">
+
+                                <a class="nav-link text-dark"
+                                   asp-controller="MyProfile"
+                                   asp-action="Index">
+
+                                    My Profile
+
+                                </a>
+
+                            </li>
+                        }
+
+
+                        <!-- NOTIFICATION DATA -->
+                            var email = User.FindFirstValue(ClaimTypes.Email);
+
+                            var currentUser = DbContext.Users
+                            .FirstOrDefault(u => u.Email == email);
+
+                            var notifications = currentUser == null
+                            ? new List<Notification>()
+                            : NotificationService.GetUserNotifications(currentUser.Id);
+
+                            var unreadCount = notifications.Count(n => !n.IsRead);
+
+
+                        <!-- NOTIFICATION BELL -->
+
+                        <li class="nav-item dropdown">
+
+                            <a class="nav-link dropdown-toggle text-dark"
+                               href="#"
+                               role="button"
+                               data-bs-toggle="dropdown"
+                               aria-expanded="false">
+
+                                🔔 @unreadCount
+
+                            </a>
+
+
+                            <!-- DROPDOWN -->
+
+                            <ul class="dropdown-menu dropdown-menu-end"
+                                style="min-width: 350px;">
+
+                                <!-- HEADER -->
+
+                                <li>
+
+                                    <h6 class="dropdown-header">
+
+                                        Notifications
+
+                                        @if (unreadCount > 0)
+                                        {
+                                            <span class="badge bg-danger">
+
+                                                @unreadCount New
+
+                                            </span>
+                                        }
+
+                                    </h6>
+
+                                </li>
+
+
+                                <li>
+
+                                    <hr class="dropdown-divider" />
+
+                                </li>
+
+
+                                <!-- NOTIFICATIONS -->
+
+                                @if (notifications.Count == 0)
+                                {
+                                    <li>
+
+                                        <span class="dropdown-item-text text-muted">
+
+                                            No notifications
+
+                                        </span>
+
+                                    </li>
+                                }
+                                else
+                                {
+                                    foreach (var notification in notifications.Take(5))
+                                    {
+                                        <li>
+
+                                            <a class="dropdown-item @(notification.IsRead ? "" : "fw-bold")"
+                                               asp-controller="Notification"
+                                               asp-action="Index">
+
+                                                <span>
+                                                    @(notification.IsRead ? "" : "● ")
+                                                    @notification.Message
+                                                </span>
+
+                                                <br />
+
+                                                <small class="text-muted">
+
+                                                    @notification.CreatedAt.ToString("dd-MM-yyyy HH:mm")
+
+                                                </small>
+
+                                            </a>
+
+                                        </li>
+                                    }
+                                }
+
+
+                                <!-- DIVIDER -->
+
+                                <li>
+
+                                    <hr class="dropdown-divider" />
+
+                                </li>
+
+
+                                <!-- VIEW ALL -->
+
+                                <li class="text-center">
+
+                                    <a class="btn btn-sm btn-outline-primary"
+                                       asp-controller="Notification"
+                                       asp-action="Index">
+
+                                        View All Notifications
+
+                                    </a>
+
+                                </li>
+
+                            </ul>
+
+                        </li>
+
+                    }
+
+                </ul>
+
+
+                <!-- RIGHT MENU -->
+
+                <ul class="navbar-nav">
+
+                    @if (User.Identity?.IsAuthenticated == true)
+                    {
+                        <!-- USER -->
+
+                        <li class="nav-item">
+
+                            <span class="nav-link text-dark">
+
+                                Hello,
+
+                                <strong>
+                                    @User.Identity.Name
+                                </strong>
+
+                                @if (User.IsInRole("Admin"))
+                                {
+                                    <span class="badge bg-danger">
+                                        Admin
+                                    </span>
+                                }
+
+                                @if (User.IsInRole("Employee"))
+                                {
+                                    <span class="badge bg-primary">
+                                        Employee
+                                    </span>
+                                }
+
+                            </span>
+
+                        </li>
+                        
+                            <!-- CHANGE PASSWORD -->
+
+                            <li class="nav-item">
+
+                                <a class="nav-link text-dark"
+                                   asp-controller="Account"
+                                   asp-action="ChangePassword">
+
+                                    Change Password
+
+                                </a>
+
+                            </li>
+
+                        <!-- LOGOUT -->
+
+                        <li class="nav-item">
+
+                            <form asp-controller="Account"
+                                  asp-action="Logout"
+                                  method="post"
+                                  class="d-inline">
+
+                                @Html.AntiForgeryToken()
+
+                                <button type="submit"
+                                        class="nav-link btn btn-link text-dark">
+
+                                    Logout
+
+                                </button>
+
+                            </form>
+
+                        </li>
+
+                    }
+                    else
+                    {
+                        <!-- LOGIN -->
+
+                        <li class="nav-item">
+
+                            <a class="nav-link text-dark"
+                               asp-controller="Account"
+                               asp-action="Login">
+
+                                Login
+
+                            </a>
+
+                        </li>
+
+
+                        <!-- REGISTER -->
+
+                        <li class="nav-item">
+
+                            <a class="nav-link text-dark"
+                               asp-controller="Account"
+                               asp-action="Register">
+
+                                Register
+
+                            </a>
+
+                        </li>
+                    }
+
+                </ul>
+
+            </div>
+
+        </div>
+
+    </nav>
+
+</header>
+
+
+<!-- MAIN CONTENT -->
+
+<div class="container">
+
+    <main role="main"
+          class="pb-3">
+
+        @RenderBody()
+
+    </main>
+
+</div>
+
+
+<!-- FOOTER -->
+
+<footer class="border-top footer text-muted">
+
+    <div class="container">
+
+        &copy; @DateTime.Now.Year - Employee Management System
+
+    </div>
+
+</footer>
+
+
+<!-- JAVASCRIPT -->
+
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
+
+<script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+
+<script src="~/js/site.js"
+        asp-append-version="true"></script>
+
+@await RenderSectionAsync("Scripts", required: false)
+
+</body>
+
+</html>

@@ -1,0 +1,193 @@
+﻿@{
+    ViewData["Title"] = "Reports";
+}
+
+<div class="container-fluid">
+
+    <div class="mb-4">
+
+        <h1 class="fw-bold">
+            Reports
+        </h1>
+
+        <p class="text-muted">
+            Generate and export employee management reports.
+        </p>
+
+    </div>
+
+
+    <div class="row g-4">
+
+
+        <!-- EMPLOYEE REPORT -->
+
+        <div class="col-lg-4">
+
+            <div class="card shadow-sm border-0 h-100">
+
+                <div class="card-body">
+
+                    <div class="report-icon bg-primary-subtle text-primary">
+                        <i class="bi bi-people-fill"></i>
+                    </div>
+
+                    <h4 class="fw-bold mt-3">
+                        Employee Report
+                    </h4>
+
+                    <p class="text-muted">
+                        View employee information including
+                        name, email, phone, salary and joining date.
+                    </p>
+
+                    <div class="d-grid gap-2">
+
+                        <a asp-action="Employees"
+                           class="btn btn-outline-primary">
+                            <i class="bi bi-eye me-2"></i>
+                            View Report
+                        </a>
+
+                        <a asp-action="ExportEmployeesExcel"
+                           class="btn btn-success">
+                            <i class="bi bi-file-earmark-excel me-2"></i>
+                            Export Excel
+                        </a>
+
+                        <a asp-action="ExportEmployeesPdf"
+                           class="btn btn-danger">
+                            <i class="bi bi-file-earmark-pdf me-2"></i>
+                            Export PDF
+                        </a>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- DEPARTMENT REPORT -->
+
+        <div class="col-lg-4">
+
+            <div class="card shadow-sm border-0 h-100">
+
+                <div class="card-body">
+
+                    <div class="report-icon bg-success-subtle text-success">
+                        <i class="bi bi-building"></i>
+                    </div>
+
+                    <h4 class="fw-bold mt-3">
+                        Department Report
+                    </h4>
+
+                    <p class="text-muted">
+                        View departments and employee count
+                        for each department.
+                    </p>
+
+                    <div class="d-grid gap-2">
+
+                        <a asp-action="Departments"
+                           class="btn btn-outline-success">
+                            <i class="bi bi-eye me-2"></i>
+                            View Report
+                        </a>
+
+                        <a asp-action="ExportDepartmentsExcel"
+                           class="btn btn-success">
+                            <i class="bi bi-file-earmark-excel me-2"></i>
+                            Export Excel
+                        </a>
+
+                        <a asp-action="ExportDepartmentsPdf"
+                           class="btn btn-danger">
+                            <i class="bi bi-file-earmark-pdf me-2"></i>
+                            Export PDF
+                        </a>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- LEAVE REPORT -->
+
+        <div class="col-lg-4">
+
+            <div class="card shadow-sm border-0 h-100">
+
+                <div class="card-body">
+
+                    <div class="report-icon bg-warning-subtle text-warning">
+                        <i class="bi bi-calendar-check"></i>
+                    </div>
+
+                    <h4 class="fw-bold mt-3">
+                        Leave Report
+                    </h4>
+
+                    <p class="text-muted">
+                        View employee leaves, duration,
+                        reasons and approval status.
+                    </p>
+
+                    <div class="d-grid gap-2">
+
+                        <a asp-action="Leaves"
+                           class="btn btn-outline-warning">
+                            <i class="bi bi-eye me-2"></i>
+                            View Report
+                        </a>
+
+                        <a asp-action="ExportLeavesExcel"
+                           class="btn btn-success">
+                            <i class="bi bi-file-earmark-excel me-2"></i>
+                            Export Excel
+                        </a>
+
+                        <a asp-action="ExportLeavesPdf"
+                           class="btn btn-danger">
+                            <i class="bi bi-file-earmark-pdf me-2"></i>
+                            Export PDF
+                        </a>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<style>
+
+    .report-icon {
+        width: 55px;
+        height: 55px;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 25px;
+    }
+
+    .card {
+        border-radius: 14px;
+    }
+
+</style>

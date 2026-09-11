@@ -1,0 +1,496 @@
+﻿@model EmployeeManagementSystem.Models.DashboardViewModel
+
+@{
+    ViewData["Title"] = "Dashboard";
+}
+
+<style>
+    .dashboard-title {
+        margin-bottom: 8px;
+    }
+
+    .dashboard-heading {
+        margin-bottom: 10px;
+    }
+
+    .dashboard-card {
+        height: 78px;
+        margin-bottom: 10px;
+    }
+
+        .dashboard-card .card-body {
+            padding: 10px 15px;
+        }
+
+        .dashboard-card h5 {
+            font-size: 15px;
+            margin-bottom: 3px;
+        }
+
+        .dashboard-card h2 {
+            font-size: 23px;
+            margin: 0;
+        }
+
+    .leave-statistics {
+        margin-top: 2px;
+    }
+
+        .leave-statistics .card-body {
+            padding: 10px 15px;
+        }
+
+        .leave-statistics h4 {
+            font-size: 18px;
+            margin-bottom: 8px;
+        }
+
+    .leave-stat-box h6 {
+        margin-bottom: 2px;
+        font-size: 13px;
+    }
+
+    .leave-stat-box h3 {
+        margin: 0;
+        font-size: 20px;
+    }
+
+    .department-section {
+        margin-top: 10px;
+    }
+
+        .department-section .card-body {
+            padding: 10px 15px;
+        }
+
+        .department-section h4 {
+            font-size: 18px;
+            margin-bottom: 8px;
+        }
+
+    .department-box {
+        padding: 6px;
+    }
+
+        .department-box .department-name {
+            font-size: 13px;
+        }
+
+        .department-box .employee-count {
+            font-size: 20px;
+            font-weight: bold;
+        }
+
+    .employee-card {
+        height: 90px;
+    }
+
+        .employee-card .card-body {
+            padding: 12px 15px;
+        }
+
+        .employee-card h5 {
+            font-size: 15px;
+            margin-bottom: 4px;
+        }
+
+        .employee-card h2 {
+            font-size: 23px;
+            margin: 0;
+        }
+</style>
+ 
+<h1 class="dashboard-title">
+    Dashboard
+</h1>
+
+ 
+@if (User.IsInRole("Admin"))
+{
+    <h3 class="dashboard-heading">
+        Admin Dashboard
+    </h3>
+
+
+    <div class="row">
+
+        <!-- Total Employees -->
+
+        <div class="col-md-4">
+
+            <div class="card shadow-sm dashboard-card">
+
+                <div class="card-body">
+
+                    <h5>
+                        Total Employees
+                    </h5>
+
+                    <h2>
+                        @Model.TotalEmployees
+                    </h2>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- Total Departments -->
+
+        <div class="col-md-4">
+
+            <div class="card shadow-sm dashboard-card">
+
+                <div class="card-body">
+
+                    <h5>
+                        Total Departments
+                    </h5>
+
+                    <h2>
+                        @Model.TotalDepartments
+                    </h2>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- Pending Leaves -->
+
+        <div class="col-md-4">
+
+            <div class="card shadow-sm dashboard-card">
+
+                <div class="card-body">
+
+                    <h5>
+                        Pending Leaves
+                    </h5>
+
+                    <h2>
+                        @Model.PendingLeaves
+                    </h2>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- Approved Leaves -->
+
+        <div class="col-md-4">
+
+            <div class="card shadow-sm dashboard-card">
+
+                <div class="card-body">
+
+                    <h5>
+                        Approved Leaves
+                    </h5>
+
+                    <h2>
+                        @Model.ApprovedLeaves
+                    </h2>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- Rejected Leaves -->
+
+        <div class="col-md-4">
+
+            <div class="card shadow-sm dashboard-card">
+
+                <div class="card-body">
+
+                    <h5>
+                        Rejected Leaves
+                    </h5>
+
+                    <h2>
+                        @Model.RejectedLeaves
+                    </h2>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- Average Salary -->
+
+        <div class="col-md-4">
+
+            <div class="card shadow-sm dashboard-card">
+
+                <div class="card-body">
+
+                    <h5>
+                        Average Salary
+                    </h5>
+
+                    <h2>
+                        ₹@Model.AverageSalary.ToString("N2")
+                    </h2>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- Highest Salary -->
+
+        <div class="col-md-4">
+
+            <div class="card shadow-sm dashboard-card">
+
+                <div class="card-body">
+
+                    <h5>
+                        Highest Salary
+                    </h5>
+
+                    <h2>
+                        ₹@Model.HighestSalary.ToString("N2")
+                    </h2>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+     
+    <div class="card shadow-sm leave-statistics">
+
+        <div class="card-body">
+
+            <h4>
+                Leave Statistics
+            </h4>
+
+            <div class="row text-center">
+
+                <!-- Pending -->
+
+                <div class="col-md-4 leave-stat-box">
+
+                    <h6>
+                        Pending
+                    </h6>
+
+                    <h3 class="text-warning">
+                        @Model.PendingLeaves
+                    </h3>
+
+                </div>
+
+
+                <!-- Approved -->
+
+                <div class="col-md-4 leave-stat-box">
+
+                    <h6>
+                        Approved
+                    </h6>
+
+                    <h3 class="text-success">
+                        @Model.ApprovedLeaves
+                    </h3>
+
+                </div>
+
+
+                <!-- Rejected -->
+
+                <div class="col-md-4 leave-stat-box">
+
+                    <h6>
+                        Rejected
+                    </h6>
+
+                    <h3 class="text-danger">
+                        @Model.RejectedLeaves
+                    </h3>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    
+
+    <div class="card shadow-sm department-section">
+
+        <div class="card-body">
+
+            <h4>
+                Department-wise Employees
+            </h4>
+
+            <div class="row text-center">
+
+                @if (Model.DepartmentEmployeeCounts.Any())
+                {
+                    @foreach (var department in Model.DepartmentEmployeeCounts)
+                    {
+                        <div class="col-md-2 col-6">
+
+                            <div class="border rounded department-box">
+
+                                <div class="department-name fw-bold">
+                                    @department.DepartmentName
+                                </div>
+
+                                <div class="employee-count">
+                                    @department.EmployeeCount
+                                </div>
+
+                            </div>
+
+                        </div>
+                    }
+                }
+                else
+                {
+                    <div class="col-12">
+
+                        <span class="text-muted">
+                            No department data available.
+                        </span>
+
+                    </div>
+                }
+
+            </div>
+
+        </div>
+
+    </div>
+}
+
+
+<!-- ========================================= -->
+<!-- EMPLOYEE DASHBOARD -->
+<!-- ========================================= -->
+@if (User.IsInRole("Employee"))
+{
+    <h3 class="dashboard-heading">
+        Employee Dashboard
+    </h3>
+
+
+    <div class="row">
+
+        <!-- My Leaves -->
+
+        <div class="col-md-3 mb-3">
+
+            <div class="card shadow-sm employee-card">
+
+                <div class="card-body">
+
+                    <h5>
+                        My Leaves
+                    </h5>
+
+                    <h2>
+                        @Model.MyLeaves
+                    </h2>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- Pending -->
+
+        <div class="col-md-3 mb-3">
+
+            <div class="card shadow-sm employee-card">
+
+                <div class="card-body">
+
+                    <h5>
+                        Pending
+                    </h5>
+
+                    <h2>
+                        @Model.MyPendingLeaves
+                    </h2>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- Approved -->
+
+        <div class="col-md-3 mb-3">
+
+            <div class="card shadow-sm employee-card">
+
+                <div class="card-body">
+
+                    <h5>
+                        Approved
+                    </h5>
+
+                    <h2>
+                        @Model.MyApprovedLeaves
+                    </h2>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- Rejected -->
+
+        <div class="col-md-3 mb-3">
+
+            <div class="card shadow-sm employee-card">
+
+                <div class="card-body">
+
+                    <h5>
+                        Rejected
+                    </h5>
+
+                    <h2>
+                        @Model.MyRejectedLeaves
+                    </h2>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+}

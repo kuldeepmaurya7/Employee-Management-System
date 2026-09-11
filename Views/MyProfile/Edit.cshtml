@@ -1,0 +1,358 @@
+﻿@model EmployeeManagementSystem.Models.Employee
+
+@{
+    ViewData["Title"] = "Edit Profile";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-3">
+
+    <h1>Edit Profile</h1>
+
+    <a asp-controller="MyProfile"
+       asp-action="Index"
+       class="btn btn-secondary">
+        Back to Profile
+    </a>
+
+</div>
+
+<hr />
+
+<div class="row">
+
+    <div class="col-md-8">
+
+        <div class="card shadow-sm">
+
+            <div class="card-header bg-dark text-white">
+
+                <h4 class="mb-0">
+                    Update Profile
+                </h4>
+
+            </div>
+
+            <div class="card-body">
+
+                <form asp-action="Edit"
+                      method="post"
+                      enctype="multipart/form-data">
+
+                    <div asp-validation-summary="ModelOnly"
+                         class="text-danger mb-3">
+                    </div>
+
+
+                    <!-- NAME -->
+
+                    <div class="mb-3">
+
+                        <label asp-for="Name"
+                               class="form-label">
+                            Name
+                        </label>
+
+                        <input asp-for="Name"
+                               class="form-control"
+                               placeholder="Enter your name" />
+
+                        <span asp-validation-for="Name"
+                              class="text-danger">
+                        </span>
+
+                    </div>
+
+
+                    <!-- EMAIL -->
+
+                    <div class="mb-3">
+
+                        <label class="form-label">
+                            Email
+                        </label>
+
+                        <input value="@Model.Email"
+                               class="form-control"
+                               readonly />
+
+                        <small class="text-muted">
+                            Email cannot be changed.
+                        </small>
+
+                    </div>
+
+
+                    <!-- PHONE -->
+
+                    <div class="mb-3">
+
+                        <label asp-for="Phone"
+                               class="form-label">
+                            Phone
+                        </label>
+
+                        <input asp-for="Phone"
+                               class="form-control"
+                               maxlength="10"
+                               placeholder="Enter 10-digit mobile number" />
+
+                        <span asp-validation-for="Phone"
+                              class="text-danger">
+                        </span>
+
+                    </div>
+
+
+                    <!-- PROFILE IMAGE -->
+
+                    <div class="mb-3">
+
+                        <label class="form-label">
+                            Profile Image
+                        </label>
+
+                        <input type="file"
+                               name="ProfileImage"
+                               id="ProfileImage"
+                               class="form-control"
+                               accept=".jpg,.jpeg,.png,.webp" />
+
+                        <small class="text-muted">
+                            Allowed: JPG, JPEG, PNG, WEBP
+                            <br />
+                            Maximum size: 2 MB
+                        </small>
+
+                        <div id="imageError"
+                             class="text-danger mt-1">
+                        </div>
+
+                        <span asp-validation-for="ProfileImage"
+                              class="text-danger">
+                        </span>
+
+                    </div>
+
+
+                    <!-- IMAGE PREVIEW -->
+
+                    <div class="mb-3">
+
+                        <img id="imagePreview"
+                             src="@(string.IsNullOrEmpty(Model.ProfileImage)
+                                                              ? "#"
+                                                              : Model.ProfileImage)"
+                             alt="Profile Image"
+                             class="img-thumbnail"
+                             style="
+                                 width:150px;
+                                 height:150px;
+                                 object-fit:cover;
+                                 @(string.IsNullOrEmpty(Model.ProfileImage)
+                                                                  ? "display:none;"
+                                                                  : "")" />
+
+                    </div>
+
+
+                    <!-- DEPARTMENT -->
+
+                    <div class="mb-3">
+
+                        <label class="form-label">
+                            Department
+                        </label>
+
+                        <input value="@(Model.Department?.Name ?? "Not Assigned")"
+                               class="form-control"
+                               readonly />
+
+                    </div>
+
+
+                    <!-- SALARY -->
+
+                    <div class="mb-3">
+
+                        <label class="form-label">
+                            Salary
+                        </label>
+
+                        <input value="₹@Model.Salary.ToString("N2")"
+                               class="form-control"
+                               readonly />
+
+                    </div>
+
+
+                    <!-- JOINING DATE -->
+
+                    <div class="mb-3">
+
+                        <label class="form-label">
+                            Joining Date
+                        </label>
+
+                        <input value="@Model.JoiningDate.ToString("dd-MM-yyyy")"
+                               class="form-control"
+                               readonly />
+
+                    </div>
+
+
+                    <!-- BUTTONS -->
+
+                    <button type="submit"
+                            id="saveButton"
+                            class="btn btn-success">
+                        Save Changes
+                    </button>
+
+                    <a asp-controller="MyProfile"
+                       asp-action="Index"
+                       class="btn btn-secondary">
+                        Cancel
+                    </a>
+
+                </form>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+@section Scripts {
+
+    <partial name="_ValidationScriptsPartial" />
+
+    <script>
+
+        const profileImage =
+            document.getElementById("ProfileImage");
+
+        const imagePreview =
+            document.getElementById("imagePreview");
+
+        const imageError =
+            document.getElementById("imageError");
+
+        const saveButton =
+            document.getElementById("saveButton");
+
+
+        const maxSize =
+            2 * 1024 * 1024;
+
+
+        const allowedExtensions =
+            [
+                ".jpg",
+                ".jpeg",
+                ".png",
+                ".webp"
+            ];
+
+
+        const allowedMimeTypes =
+            [
+                "image/jpeg",
+                "image/png",
+                "image/webp"
+            ];
+
+
+        profileImage.addEventListener(
+            "change",
+            function ()
+            {
+                imageError.textContent = "";
+
+                saveButton.disabled = false;
+
+                const file =
+                    this.files[0];
+
+                if (!file)
+                {
+                    return;
+                }
+ 
+                if (file.size > maxSize)
+                {
+                    imageError.textContent =
+                        "Profile image must not exceed 2 MB.";
+
+                    this.value = "";
+
+                    saveButton.disabled = true;
+
+                    imagePreview.style.display =
+                        "none";
+
+                    return;
+                }
+                 
+                const fileName =
+                    file.name.toLowerCase();
+
+                const extension =
+                    fileName.substring(
+                        fileName.lastIndexOf("."));
+
+
+                if (!allowedExtensions.includes(
+                    extension))
+                {
+                    imageError.textContent =
+                        "Only JPG, JPEG, PNG and WEBP images are allowed.";
+
+                    this.value = "";
+
+                    saveButton.disabled = true;
+
+                    imagePreview.style.display =
+                        "none";
+
+                    return;
+                }
+
+                 
+                if (!allowedMimeTypes.includes(
+                    file.type))
+                {
+                    imageError.textContent =
+                        "Invalid image file type.";
+
+                    this.value = "";
+
+                    saveButton.disabled = true;
+
+                    imagePreview.style.display =
+                        "none";
+
+                    return;
+                }
+                 
+                const reader =
+                    new FileReader();
+
+                reader.onload =
+                    function (event)
+                    {
+                        imagePreview.src =
+                            event.target.result;
+
+                        imagePreview.style.display =
+                            "block";
+                    };
+
+                reader.readAsDataURL(file);
+            }
+        );
+
+    </script>
+}

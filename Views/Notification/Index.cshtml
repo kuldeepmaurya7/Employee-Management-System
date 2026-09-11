@@ -1,0 +1,85 @@
+﻿@model List<EmployeeManagementSystem.Models.Notification>
+
+@{
+    ViewData["Title"] = "Notifications";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-3">
+
+    <h1>Notifications</h1>
+
+    @if (Model.Any(n => !n.IsRead))
+    {
+        <form asp-action="MarkAllAsRead"
+              method="post">
+
+            <button type="submit"
+                    class="btn btn-primary">
+                Mark All as Read
+            </button>
+
+        </form>
+    }
+
+</div>
+
+<hr />
+
+@if (!Model.Any())
+{
+    <div class="alert alert-info">
+        No notifications available.
+    </div>
+}
+else
+{
+    <div class="list-group">
+
+        @foreach (var notification in Model)
+        {
+            <div class="list-group-item
+                                @(notification.IsRead ? "" : "fw-bold")">
+
+                <div class="d-flex justify-content-between">
+
+                    <div>
+                        🔔 @notification.Message
+                    </div>
+
+                    <small class="text-muted">
+                        @notification.CreatedAt.ToString("dd-MM-yyyy HH:mm")
+                    </small>
+
+                </div>
+
+                @if (!notification.IsRead)
+                {
+                    <form asp-action="MarkAsRead"
+                          method="post"
+                          class="mt-2">
+
+                        <input type="hidden"
+                               name="id"
+                               value="@notification.Id" />
+
+                        <button type="submit"
+                                class="btn btn-sm btn-primary">
+
+                            Mark as Read
+
+                        </button>
+
+                    </form>
+                }
+                else
+                {
+                    <small class="text-success">
+                        ✓ Read
+                    </small>
+                }
+
+            </div>
+        }
+
+    </div>
+}

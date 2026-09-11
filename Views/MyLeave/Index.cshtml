@@ -1,0 +1,146 @@
+﻿@model List<EmployeeManagementSystem.Models.Leave>
+
+@{
+    ViewData["Title"] = "My Leaves";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-3">
+
+    <h1>My Leaves</h1>
+
+    <a asp-controller="MyLeave"
+       asp-action="Create"
+       class="btn btn-primary">
+        Apply Leave
+    </a>
+
+</div>
+
+<hr />
+
+
+@if (!Model.Any())
+{
+    <div class="alert alert-info">
+        You have not applied for any leave yet.
+    </div>
+}
+else
+{
+    <div class="table-responsive">
+
+        <table class="table table-bordered table-hover">
+
+            <thead class="table-dark">
+
+                <tr>
+
+                    <th>Leave Type</th>
+
+                    <th>Start Date</th>
+
+                    <th>End Date</th>
+
+                    <th>Duration</th>
+
+                    <th>Reason</th>
+
+                    <th>Status</th>
+
+                    <th>Action</th>
+
+                </tr>
+
+            </thead>
+
+
+            <tbody>
+
+                @foreach (var leave in Model)
+                {
+                    <tr>
+
+                        <td>
+                            @leave.LeaveType
+                        </td>
+
+
+                        <td>
+                            @leave.StartDate.ToString("dd-MM-yyyy")
+                        </td>
+
+
+                        <td>
+                            @leave.EndDate.ToString("dd-MM-yyyy")
+                        </td>
+
+
+                        <td>
+                            @leave.DurationDays Day(s)
+                        </td>
+
+
+                        <td>
+                            @leave.Reason
+                        </td>
+
+
+                        <td>
+
+                            @if (leave.Status == "Pending")
+                            {
+                                <span class="badge bg-warning text-dark">
+                                    Pending
+                                </span>
+                            }
+                            else if (leave.Status == "Approved")
+                            {
+                                <span class="badge bg-success">
+                                    Approved
+                                </span>
+                            }
+                            else if (leave.Status == "Rejected")
+                            {
+                                <span class="badge bg-danger">
+                                    Rejected
+                                </span>
+                            }
+                            else
+                            {
+                                <span class="badge bg-secondary">
+                                    @leave.Status
+                                </span>
+                            }
+
+                        </td>
+
+
+                        <td>
+
+                            @if (leave.Status == "Rejected")
+                            {
+                                <a asp-controller="MyLeave"
+                                   asp-action="Reapply"
+                                   asp-route-id="@leave.Id"
+                                   class="btn btn-sm btn-primary">
+                                    Apply Again
+                                </a>
+                            }
+                            else
+                            {
+                                <span class="text-muted">
+                                    —
+                                </span>
+                            }
+
+                        </td>
+
+                    </tr>
+                }
+
+            </tbody>
+
+        </table>
+
+    </div>
+}
